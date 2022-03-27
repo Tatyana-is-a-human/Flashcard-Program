@@ -1,0 +1,93 @@
+from tkinter import *
+from random import choice
+import pandas
+from words import Word
+
+BACKGROUND_COLOR = "#B1DDC6"
+
+#-----------------------GETTING A NEW WORD AND ITS VALUES-------------#
+
+def play_again():
+    update_word()
+    frenchify()
+    window.after(1000, englishify)
+
+def update_word():
+    with open(".\data\\french_words.csv") as file:
+        wordList = pandas.read_csv(file)
+
+    lengthList = len(wordList.index)
+
+    try:
+        word.num = choice(range(1, lengthList))
+
+    except IndexError:
+        canvas.itemconfig(displayWord, text="You have memorized all of the terms. Good job!")
+    except KeyError:
+        canvas.itemconfig(displayWord, text="You have memorized all of the terms. Good job!")
+    except ValueError:
+        canvas.itemconfig(displayWord, text="You have memorized all of the terms. Good job!")
+
+    finally:
+
+        word.french = wordList.French[word.num]
+        word.eng = wordList.English[word.num]
+
+#------------UPDATING THE GUI WHEN WE HAVE A NEW WORD-----------------------#
+
+def frenchify():
+    print("update_screen()\n" + word.french)
+
+    canvas.itemconfig(displayLanguage, text="French")
+    canvas.itemconfig(displayWord, text=word.french)
+    canvas.itemconfig(Background, image=cardFront)
+
+
+def englishify():
+    canvas.itemconfig(displayLanguage, text="English")
+    canvas.itemconfig(displayWord, text=word.eng)
+    canvas.itemconfig(Background, image=cardBack)
+    print("end update_screen()")
+
+
+# -------------------DELETING KNOWN WORDS FROM THE LIST-----#
+
+def remove_word():
+    with open(".\data\\french_words.csv", "r") as file:
+        myWords = file.readlines()
+    print(word.num)
+    myWords.remove(myWords[word.num])
+    with open(".\data\\french_words.csv", "w") as file:
+        for line in myWords:
+            file.write(line)
+
+    play_again()
+
+
+# --------------CREATING THE UI-----------------#
+window = Tk()
+window.configure(bg=BACKGROUND_COLOR, padx=20, pady=20)
+
+cardBack = PhotoImage(file='.\images\card_back.png')
+cardFront = PhotoImage(file='.\images\card_front.png')
+x_img = PhotoImage(file='.\images\wrong.png')
+check_img = PhotoImage(file='.\images\\right.png')
+
+canvas = Canvas(width=800, height=530, bg=BACKGROUND_COLOR, highlightthickness=0)
+Background = canvas.create_image(405, 270, image=cardFront)
+
+displayLanguage = canvas.create_text(400, 100, font={'Arial', 30, 'italic'}, text="language")
+displayWord = canvas.create_text(400, 300, font={'Arial', 40, 'normal'}, text="word")
+
+xButt = Button(window, image=x_img, highlightthickness=0, bd=0, command=play_again)
+checkButt = Button(window, image=check_img, highlightthickness=0, bd=0, command=remove_word)
+
+canvas.grid(row=0, column=0, columnspan=2)
+xButt.grid(row=1, column=0)
+checkButt.grid(row=1, column=1)
+
+word = Word(0, "x", "y")
+
+play_again()
+
+window.mainloop()
