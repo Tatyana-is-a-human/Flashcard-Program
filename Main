@@ -13,7 +13,7 @@ def play_again():
     window.after(1000, englishify)
 
 def update_word():
-    with open(".\data\\french_words.csv") as file:
+    with open("\french_words.csv") as file:
         wordList = pandas.read_csv(file)
 
     lengthList = len(wordList.index)
@@ -53,11 +53,11 @@ def englishify():
 # -------------------DELETING KNOWN WORDS FROM THE LIST-----#
 
 def remove_word():
-    with open(".\data\\french_words.csv", "r") as file:
+    with open("\french_words.csv", "r") as file:
         myWords = file.readlines()
     print(word.num)
     myWords.remove(myWords[word.num])
-    with open(".\data\\french_words.csv", "w") as file:
+    with open("\french_words.csv", "w") as file:
         for line in myWords:
             file.write(line)
 
@@ -68,10 +68,10 @@ def remove_word():
 window = Tk()
 window.configure(bg=BACKGROUND_COLOR, padx=20, pady=20)
 
-cardBack = PhotoImage(file='.\images\card_back.png')
-cardFront = PhotoImage(file='.\images\card_front.png')
-x_img = PhotoImage(file='.\images\wrong.png')
-check_img = PhotoImage(file='.\images\\right.png')
+cardBack = PhotoImage(file='\card_back.png')
+cardFront = PhotoImage(file='\card_front.png')
+x_img = PhotoImage(file='\wrong.png')
+check_img = PhotoImage(file='\right.png')
 
 canvas = Canvas(width=800, height=530, bg=BACKGROUND_COLOR, highlightthickness=0)
 Background = canvas.create_image(405, 270, image=cardFront)
