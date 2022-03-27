@@ -1,0 +1,6 @@
+class Word():
+    def __init__(self, num: int, eng:str, french: str):
+        self.num = num
+        self.eng = eng
+        self.french = french
+
